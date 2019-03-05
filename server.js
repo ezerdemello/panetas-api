@@ -1,7 +1,14 @@
 const WebServer = require('./webserver')
+const planetaRoute = require('./planetas-route')
 
 const init = async () => {
-    new WebServer(process.env.SERVER_PORT, {}).init()
+    // console.log('planetasController: ', planetasController.listar)
+    new WebServer(process.env.SERVER_PORT, { routeList: [
+        planetaRoute()
+    ]}).init()
 }
 
 init()
+
+
+

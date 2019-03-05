@@ -16,7 +16,9 @@
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
+    "express-joi-validation": "^0.3.0",
     "helmet": "^3.15.1",
+    "joi": "^14.3.1",
     "method-override": "^3.0.0"
   }
 }

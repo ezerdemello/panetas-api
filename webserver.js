@@ -38,12 +38,21 @@ class WebServer {
         for (const plugin in this.plugins) {
           app.use(...this.plugins[plugin])
         }
-    
-        // if (routeList && routeList.length > 0) {
-        //   routeList.map((routeObj) => {
-        //     app.use(routeObj.prefix, this.mountRoutes(routeObj.routes))
-        //   })
-        // }
+
+        console.log('inclui plugins ...')
+        
+        if (routeList && routeList.length > 0) {
+          console.log('montando rotas declaradas ...')
+
+          routeList.map((routeObj) => {
+            
+            console.log('routeObj.prefix: ', routeObj.prefix)
+            console.log('routeObj.routes: ', routeObj.routes)
+            app.use(routeObj.prefix, this.mountRoutes(routeObj.routes))
+
+          })
+
+        }
     
         app.set('trust proxy', 1)
     
@@ -56,7 +65,20 @@ class WebServer {
         //     app.use(plugin)
         //   })
         // }
-      }
+    }
+
+    mountRoutes (routes) {
+      const router = express.Router()
+  
+      Object.keys(routes).map((key) => {
+        routes[key].map((route) => {
+          console.log('montando rota: ', route.path)
+          router[key.toLowerCase()](route.path, route.handlers)
+        })
+      })
+      
+      return router
+    }
 
     init () {
         this.server = this.httpServer.listen(this.port)
