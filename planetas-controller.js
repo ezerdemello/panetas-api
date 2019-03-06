@@ -9,24 +9,26 @@ const result = [
 ]
 
 module.exports = () => {
-
+    
     const listar = async (req, res, next) => {
-        return new Promise(function (resolve, reject){
-            resolve(res.json(result))
-        });
+        try {
+            return res.json(result)
+        } catch (error) {
+            next(error)
+        }
     }
-    
+
     const obterPorId = async (req, res, next) => {
-
-
-        console.log('req:', req)
-
-        return res.json(_.find(result, {'id': '1'}))
-        // new Promise(function (resolve, reject){
-        //     res.json(_.find(result, {'id': '1'}))
-        // });
+        try {
+            const planeta = _.find(result, {id: req.params.id})
+            if (!planeta)
+                throw new Error('nenhum objeto encontrado')
+            return res.json(planeta)
+        } catch (error) {
+            next(error)
+        }
     }
-    
+
     return {
         listar,
         obterPorId

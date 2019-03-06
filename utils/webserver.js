@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const compression = require('compression')
 const cookieParser = require('cookie-parser')
 const methodOverride = require('method-override')
+const errorHandler = require('./webserver-error-handler')
 
 class WebServer {
 
@@ -21,6 +22,10 @@ class WebServer {
           [cors()],
         ]        
 
+        this.finalPlugins = [
+          [errorHandler],
+        ]
+
         this.port = port
         this.app = express()
         this.httpServer = http.createServer(this.app)
@@ -29,42 +34,35 @@ class WebServer {
     }
 
     configure (app, options) {
-        const { initialPluginList, routeList, finalPluginList } = options
-    
-        // if (initialPluginList && initialPluginList.length > 0) {
-        //   this.plugins = [...this.plugins, ...initialPluginList]
-        // }
-    
-        for (const plugin in this.plugins) {
-          app.use(...this.plugins[plugin])
-        }
+      const { initialPluginList, routeList, finalPluginList } = options
+  
+      if (initialPluginList && initialPluginList.length > 0) {
+        this.plugins = [...this.plugins, ...initialPluginList]
+      }
+  
+      for (const plugin in this.plugins) {
+        app.use(...this.plugins[plugin])
+      }
 
-        console.log('inclui plugins ...')
-        
-        if (routeList && routeList.length > 0) {
-          console.log('montando rotas declaradas ...')
-
-          routeList.map((routeObj) => {
-            
-            console.log('routeObj.prefix: ', routeObj.prefix)
-            console.log('routeObj.routes: ', routeObj.routes)
-            app.use(routeObj.prefix, this.mountRoutes(routeObj.routes))
-
-          })
-
-        }
-    
-        app.set('trust proxy', 1)
-    
-        app.get('/health', (req, res) => {
-          res.end(`OK for ${process.uptime()} seconds`)
+      if (routeList && routeList.length > 0) {
+        routeList.map((routeObj) => {
+          app.use(routeObj.prefix, this.mountRoutes(routeObj.routes))
         })
-    
-        // if (finalPluginList && finalPluginList.length > 0) {
-        //   finalPluginList.map((plugin) => {
-        //     app.use(plugin)
-        //   })
-        // }
+      }
+  
+      app.set('trust proxy', 1)
+  
+      app.get('/health', (req, res) => {
+        res.end(`OK for ${process.uptime()} seconds`)
+      })
+  
+      if (finalPluginList && finalPluginList.length > 0) {
+        this.finalPlugins = [...this.finalPlugins, ...finalPluginList]
+      }
+
+      for (const plugin in this.finalPlugins) {
+        app.use(...this.finalPlugins[plugin])
+      }
     }
 
     mountRoutes (routes) {
@@ -76,7 +74,7 @@ class WebServer {
           router[key.toLowerCase()](route.path, route.handlers)
         })
       })
-      
+
       return router
     }
 
@@ -94,7 +92,7 @@ class WebServer {
 
 module.exports = WebServer
 
-// module.exports = 
+
 
 
 

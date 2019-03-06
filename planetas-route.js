@@ -1,7 +1,9 @@
 
 const joi = require('joi')
-const expressValidator = require('express-joi-validation')({})
-const planetasGetQueryString = joi.object().keys({ nome: joi.string() })
+const planetasGetQueries = joi.object().keys({ nome: joi.string() })
+const planetaGetPorIdParams = joi.object().keys({ id: joi.string() })
+
+const expressValidator = require('express-joi-validation')({ passError: true })
 const planetasController = require('./planetas-controller')()
 
 module.exports = () => {
@@ -12,15 +14,15 @@ module.exports = () => {
           {
             path: '/planetas',
             handlers: [
-            //   expressValidator.query(recursoSchema.listar),
-            planetasController.listar
+                expressValidator.query(planetasGetQueries),
+                planetasController.listar
             ]
           },
           {
             path: '/planetas/:id',
             handlers: [
-            //   expressValidator.query(recursoSchema.listar),
-            planetasController.obterPorId
+                expressValidator.params(planetaGetPorIdParams),
+                planetasController.obterPorId
             ]
           }
         ]
