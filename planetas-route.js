@@ -1,13 +1,8 @@
 
 const joi = require('joi')
 const expressValidator = require('express-joi-validation')({})
-const planetasGetQueryString = joi.object().keys({
-    nome: joi.string()
-})
-
-
+const planetasGetQueryString = joi.object().keys({ nome: joi.string() })
 const planetasController = require('./planetas-controller')()
-
 
 module.exports = () => {
     return {
@@ -19,6 +14,13 @@ module.exports = () => {
             handlers: [
             //   expressValidator.query(recursoSchema.listar),
             planetasController.listar
+            ]
+          },
+          {
+            path: '/planetas/:id',
+            handlers: [
+            //   expressValidator.query(recursoSchema.listar),
+            planetasController.obterPorId
             ]
           }
         ]
