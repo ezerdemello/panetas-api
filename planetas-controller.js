@@ -1,18 +1,35 @@
 // Load the full build.
 const _ = require('lodash');
-
-const result = [
-    { id: '1', nome: 'test1', clima: 'test1', terreno: 'test1' },
-    { id: '2', nome: 'test2', clima: 'test2', terreno: 'test2' },
-    { id: '3', nome: 'test3', clima: 'test3', terreno: 'test3' },
-    { id: '4', nome: 'test4', clima: 'test4', terreno: 'test4' },
-]
+const NotFoundError = require('./utils/not-found-error')
+const PlanetaRepository = require('./planetas-repository')
+const uuidv1 = require('uuid/v1');
+const repository = new PlanetaRepository()
 
 module.exports = () => {
     
+    const alterar = async (req, res, next) => {
+        try {
+            const model = { id: req.params.id, ...req.body }
+            await repository.save(model)
+            return res.json({mensagem: 'alterado com sucesso!'})
+        } catch (error) {
+            next(error)
+        }    
+    }
+    
+    const criar = async (req, res, next) => {
+        try {
+            const model = { id: uuidv1(), ...req.body }
+            await repository.save(model)
+            return res.json({ mensagem: 'criado com sucesso!' })
+        } catch (error) {
+            next(error)
+        }    
+    }
+    
     const listar = async (req, res, next) => {
         try {
-            return res.json(result)
+            return res.json(await repository.get())
         } catch (error) {
             next(error)
         }
@@ -20,9 +37,9 @@ module.exports = () => {
 
     const obterPorId = async (req, res, next) => {
         try {
-            const planeta = _.find(result, {id: req.params.id})
+            const planeta = await repository.find(req.params.id) 
             if (!planeta)
-                throw new Error('nenhum objeto encontrado')
+                throw new NotFoundError('nenhum objeto encontrado')
             return res.json(planeta)
         } catch (error) {
             next(error)
@@ -30,6 +47,8 @@ module.exports = () => {
     }
 
     return {
+        alterar,
+        criar,
         listar,
         obterPorId
     }
