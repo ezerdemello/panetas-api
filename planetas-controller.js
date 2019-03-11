@@ -10,7 +10,7 @@ module.exports = () => {
     const alterar = async (req, res, next) => {
         try {
             const model = { id: req.params.id, ...req.body }
-            await repository.save(model)
+            await repository.update(model)
             return res.json({mensagem: 'alterado com sucesso!'})
         } catch (error) {
             next(error)
@@ -19,9 +19,17 @@ module.exports = () => {
     
     const criar = async (req, res, next) => {
         try {
-            const model = { id: uuidv1(), ...req.body }
-            await repository.save(model)
+            await repository.create(req.body)
             return res.json({ mensagem: 'criado com sucesso!' })
+        } catch (error) {
+            next(error)
+        }    
+    }
+
+    const deletar = async (req, res, next) => {
+        try {
+            await repository.delete(req.params.id)
+            return res.json({ mensagem: 'deletado com sucesso!' })
         } catch (error) {
             next(error)
         }    
@@ -29,7 +37,10 @@ module.exports = () => {
     
     const listar = async (req, res, next) => {
         try {
-            return res.json(await repository.get())
+
+            console.log('req.query: ', req.query)
+
+            return res.json(await repository.get(req.query))
         } catch (error) {
             next(error)
         }
@@ -49,6 +60,7 @@ module.exports = () => {
     return {
         alterar,
         criar,
+        deletar,
         listar,
         obterPorId
     }
