@@ -16,10 +16,10 @@ const PlanetaRepository = class PlanetaRepository {
             this.db.push(model)
             return
         }
-        console.log('before this.db: ', this.db)
+        // console.log('before this.db: ', this.db)
         _.remove(this.db, {id: model.id})
         this.db.push(model)
-        console.log('after this.db: ', this.db)
+        // console.log('after this.db: ', this.db)
     }
 
     async get() {
@@ -27,7 +27,7 @@ const PlanetaRepository = class PlanetaRepository {
     }
 
     async find(id) {
-        console.log('PlanetaRepository find')
+        // console.log('PlanetaRepository find')
         return _.find(this.db, {id: id})
     }
 }
