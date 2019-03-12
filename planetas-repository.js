@@ -24,6 +24,7 @@ const PlanetaRepository = class PlanetaRepository {
         item.nome = model.nome
         item.clima = model.clima
         item.terreno = model.terreno
+        item.qtdAparicoesFilmes = model.qtdAparicoesFilmes
         await item.save()
     }
 

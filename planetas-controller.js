@@ -17,6 +17,7 @@ module.exports = () => {
     const alterar = async (req, res, next) => {
         try {
             const model = { id: req.params.id, ...req.body }
+            addQtdAparicoeFilmes(model)  
             await planetaRepository.update(model)
             return res.json({mensagem: 'alterado com sucesso'})
         } catch (error) {
@@ -26,18 +27,9 @@ module.exports = () => {
     
     const criar = async (req, res, next) => {
         try {
-            const model = { ...req.body, qtdAparicoesFilmes: 0 }
-            const externalPlanet = _.find(planets, { name: req.body.nome })  
-            
-            if (externalPlanet) {
-                
-            }
-                model.qtdAparicoesFilmes = _.get(object, 'externalPlanet.films', []).lenght 
-
-
-            console.log('modelToDB: ', model)
-            // await planetaRepository.create(model)
-
+            const model = { ...req.body }
+            addQtdAparicoeFilmes(model)  
+            await planetaRepository.create(model)
             return res.json({ mensagem: 'criado com sucesso' })
         } catch (error) {
             console.log(error)
@@ -71,6 +63,22 @@ module.exports = () => {
         } catch (error) {
             next(error)
         }
+    }
+
+    const addQtdAparicoeFilmes = (model) => {
+
+        console.log('addQtdAparicoeFilmes-model: ', model)
+        model.qtdAparicoesFilmes = 0
+        const externalPlanet = _.find(planets, { name: model.nome })  
+
+        console.log('externalPlanet: ', externalPlanet)
+
+        if (externalPlanet) {
+            const result = _.get(externalPlanet, 'films') 
+            model.qtdAparicoesFilmes = result ? result.length : 0
+        }
+
+        console.log('addQtdAparicoeFilmes-model-end: ', model)
     }
 
     return {

@@ -2,8 +2,7 @@
 const joi = require('joi')
 const planetasGetQueries = joi.object().keys({ nome: joi.string() })
 const planetaGetPorIdParams = joi.object().keys({ id: joi.string() })
-const planetasPostBody = joi.object().keys({ nome: joi.string().required(), clima: joi.string().required(), terreno: joi.string().required() })
-const planetasPutBody = joi.object().keys({ nome: joi.string().required(), clima: joi.string().required(), terreno: joi.string().required(), qtdFilmes: joi.number() })
+const planetasPostPutBody = joi.object().keys({ nome: joi.string().required(), clima: joi.string().required(), terreno: joi.string().required() })
 const expressValidator = require('express-joi-validation')({ passError: true })
 const planetasController = require('./planetas-controller')()
 
@@ -31,7 +30,7 @@ module.exports = () => {
           {
             path: '/planetas',
             handlers: [
-                expressValidator.body(planetasPostBody),
+                expressValidator.body(planetasPostPutBody),
                 planetasController.criar
             ]
           }
@@ -41,7 +40,7 @@ module.exports = () => {
             path: '/planetas/:id',
             handlers: [
                 expressValidator.params(planetaGetPorIdParams),
-                expressValidator.body(planetasPutBody),
+                expressValidator.body(planetasPostPutBody),
                 planetasController.alterar
             ]
           }
