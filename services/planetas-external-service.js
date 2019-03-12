@@ -10,11 +10,9 @@ const PlanetsExternalService = class PlanetsExternalService {
     }
 
     async get() {
-        console.log('get begin')
         try {
             const result = await this.client.get('planets')
-            console.log(result)
-            return result.results
+            return result.data.results
         } catch (error) {
             console.log(error)
             throw error

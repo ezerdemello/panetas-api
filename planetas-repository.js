@@ -8,19 +8,18 @@ const PlanetaRepository = class PlanetaRepository {
     
     constructor() {
 
-        this.Planeta = mongoose.model('Planeta', 
+        this.Planeta = mongoose.model(
+            'Planeta', 
             new mongoose.Schema({
                      nome: {type: String, required: true},
                      clima: {type: String, required: true},
                      terreno: {type: String, required: true},
-                     aparicoes: Number }, 
-                     {collection: 'Planeta'}
-            )
-        );  
+                     qtdAparicoesFilmes: {type: Number }
+                    },{collection: 'Planeta'})
+            );  
     }
 
     async update(model) {
-        console.log('update entrou: ', model)
         const item = await this.Planeta.findById(model.id)
         item.nome = model.nome
         item.clima = model.clima
@@ -30,17 +29,15 @@ const PlanetaRepository = class PlanetaRepository {
 
     async create(model) {
         try {
-            const modelToDb = new this.Planeta({ ...model })    
+            const modelToDb = new this.Planeta(model)    
             modelToDb.save();
         } catch (error) {
-            console.log(error)
             throw new GenericError()
         } 
     }
 
     async delete(id) {
-        console.log('entrou-delete: ', id)
-        this.Planeta.findByIdAndRemove({_id: id}).exec()
+        this.Planeta.findOneAndDelete({_id: id}).exec()
     }
 
     async get(model = {}) {
@@ -66,10 +63,9 @@ const PlanetaRepository = class PlanetaRepository {
     }
 
     factoryPlanetaFromDb(itemDb) {
-        const { _id, nome, clima, terreno } = itemDb
-        return { id: _id, nome, clima, terreno }
+        const { _id, nome, clima, terreno, qtdAparicoesFilmes } = itemDb
+        return { id: _id, nome, clima, terreno, qtdAparicoesFilmes }
     }
-
 }
 
 module.exports = PlanetaRepository

@@ -70,7 +70,6 @@ class WebServer {
   
       Object.keys(routes).map((key) => {
         routes[key].map((route) => {
-          console.log('montando rota: ', route.path)
           router[key.toLowerCase()](route.path, route.handlers)
         })
       })
