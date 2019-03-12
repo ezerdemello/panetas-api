@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const GenericError = require('./utils/generic-error')
+const PlanetExternalService = require('./services/planetas-external-service')
 const mongoose = require('mongoose')
 const uuidv1 = require('uuid/v1');
 
@@ -16,14 +17,6 @@ const PlanetaRepository = class PlanetaRepository {
                      {collection: 'Planeta'}
             )
         );  
-        
-        this.db = [
-            { id: '1', nome: 'test1', clima: 'test1', terreno: 'test1' },
-            { id: '2', nome: 'test2', clima: 'test2', terreno: 'test2' },
-            { id: '3', nome: 'test3', clima: 'test3', terreno: 'test3' },
-            { id: '4', nome: 'test4', clima: 'test4', terreno: 'test4' },
-        ] 
-
     }
 
     async update(model) {
@@ -38,7 +31,7 @@ const PlanetaRepository = class PlanetaRepository {
     async create(model) {
         try {
             const modelToDb = new this.Planeta({ ...model })    
-            await modelToDb.save();
+            modelToDb.save();
         } catch (error) {
             console.log(error)
             throw new GenericError()
@@ -46,9 +39,8 @@ const PlanetaRepository = class PlanetaRepository {
     }
 
     async delete(id) {
-        
-        console.log('entrou-delete');
-        _.remove(this.db, {id: model.id})
+        console.log('entrou-delete: ', id)
+        this.Planeta.findByIdAndRemove({_id: id}).exec()
     }
 
     async get(model = {}) {
@@ -61,8 +53,8 @@ const PlanetaRepository = class PlanetaRepository {
         const resultDb = await this.Planeta.find(filters) 
         const result = []
         
-        resultDb.map((item) => {
-            result.push(this.mountItem(item))
+        resultDb.map((object) => {
+            result.push(this.factoryPlanetaFromDb(object))
         })
 
         return result
@@ -70,10 +62,10 @@ const PlanetaRepository = class PlanetaRepository {
 
     async find(id) {
         const result = await this.Planeta.findById(id)
-        return result ? this.mountItem(result) : result
+        return result ? this.factoryPlanetaFromDb(result) : result
     }
 
-    mountItem(itemDb) {
+    factoryPlanetaFromDb(itemDb) {
         const { _id, nome, clima, terreno } = itemDb
         return { id: _id, nome, clima, terreno }
     }
