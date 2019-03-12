@@ -9,7 +9,7 @@ class MongoDatabase {
 
   async _connect() {
         try {
-            await mongoose.connect(`mongodb://127.0.0.1:27017/planetas-api`, { useNewUrlParser: true })     
+            await mongoose.connect(`mongodb://${process.env.DB_URL}`, { useNewUrlParser: true })     
         } catch (error) {
             throw new GenericError()    
         }
