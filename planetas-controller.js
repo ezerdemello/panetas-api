@@ -3,23 +3,29 @@ const NotFoundError = require('./utils/not-found-error')
 
 const PlanetaRepository = require('./planetas-repository')
 const planetaRepository = new PlanetaRepository()
-const PlanetaExternalService = require('./services/planetas-external-service')
-const planetaExternalService = new PlanetaExternalService()
-let planets = [] 
+
+// const PlanetaExternalService = require('./services/planetas-external-service')
+// const planetaExternalService = new PlanetaExternalService()
+// let planets = [] 
 
 
 module.exports = () => {
     
-    planetaExternalService.get().then((data) => {
-        planets = data
-    })
+    // planetaExternalService.get().then((data) => {
+    //     planets = data
+    // })
     
     const alterar = async (req, res, next) => {
         try {
+            
             const model = { id: req.params.id, ...req.body }
-            addQtdAparicoeFilmes(model)  
+            
+            // addQtdAparicoeFilmes(model)  
+            
             await planetaRepository.update(model)
+
             return res.json({mensagem: 'alterado com sucesso'})
+
         } catch (error) {
             next(error)
         }    
@@ -28,9 +34,13 @@ module.exports = () => {
     const criar = async (req, res, next) => {
         try {
             const model = { ...req.body }
-            addQtdAparicoeFilmes(model)  
+            
+            // addQtdAparicoeFilmes(model)  
+            
             await planetaRepository.create(model)
+
             return res.json({ mensagem: 'criado com sucesso' })
+
         } catch (error) {
             console.log(error)
             next(error)
@@ -65,21 +75,22 @@ module.exports = () => {
         }
     }
 
-    const addQtdAparicoeFilmes = (model) => {
+    // const addQtdAparicoeFilmes = (model) => {
 
-        console.log('addQtdAparicoeFilmes-model: ', model)
-        model.qtdAparicoesFilmes = 0
-        const externalPlanet = _.find(planets, { name: model.nome })  
+    //     console.log('addQtdAparicoeFilmes-model: ', model)
 
-        console.log('externalPlanet: ', externalPlanet)
+    //     model.qtdAparicoesFilmes = 0
+    //     const externalPlanet = _.find(planets, { name: model.nome })  
 
-        if (externalPlanet) {
-            const result = _.get(externalPlanet, 'films') 
-            model.qtdAparicoesFilmes = result ? result.length : 0
-        }
+    //     console.log('externalPlanet: ', externalPlanet)
 
-        console.log('addQtdAparicoeFilmes-model-end: ', model)
-    }
+    //     if (externalPlanet) {
+    //         const result = _.get(externalPlanet, 'films') 
+    //         model.qtdAparicoesFilmes = result ? result.length : 0
+    //     }
+
+    //     console.log('addQtdAparicoeFilmes-model-end: ', model)
+    // }
 
     return {
         alterar,

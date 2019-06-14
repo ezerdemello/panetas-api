@@ -18,6 +18,7 @@ class WebServer {
           [cookieParser()],
           [bodyParser.json()],
           [bodyParser.urlencoded({ extended: false })],
+          
           [compression()],
           [cors()],
         ]        
