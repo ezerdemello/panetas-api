@@ -17,5 +17,5 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
       - '6379:6379'
-    volumes:
-      - ~/Pocs/DOCKER_VOLUMES/REDIS_PLANETAS:/bitnami/redis/data
+    # volumes:
+    #   - ~/Pocs/DOCKER_VOLUMES/REDIS_PLANETAS:/bitnami/redis/data

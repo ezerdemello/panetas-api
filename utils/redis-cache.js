@@ -1,30 +1,30 @@
 const PlanetaExternalService = require('../services/planetas-external-service')
 const planetaExternalService = new PlanetaExternalService()
 const redis = require('redis')
+const bluebird = require('bluebird')
 
 class RedisCache {
 
     constructor() {
         
-        this.connect().then(data => {
+        bluebird.promisifyAll(redis.RedisClient.prototype);
+        bluebird.promisifyAll(redis.Multi.prototype);
 
-            console.log("@@Conexao com redis OK!");                
-
-        }).catch((err) => {
-
-            console.log("@@Conexao com redis erro: ", error);                
-
-        })
+        this.connect()
+        
+        // .then(data => {
+        //     console.log("@@Conexao com redis OK!");                
+        // }).catch((err) => {
+        //     console.log("@@Conexao com redis erro: ", error);                
+        // })
 
     }
 
     async connect () {
-
         this.client = redis.createClient({
             port      : process.env.CACHE_PORT,  
             host      : process.env.CACHE_HOST  
         });
-
     }
 
     fillItensInCache (itens = []) {
@@ -33,8 +33,7 @@ class RedisCache {
 
         for(let index in itens) {
             const item = itens[index];
-            const valueCache = { name: item.name, qtdFilmes: (item.films ? item.films.length : 0) }
-            console.log('valueCache: ', valueCache)
+            const valueCache = { nome: item.name, qtdFilmes: (item.films ? item.films.length : 0) }
             this.client.set(item.name, JSON.stringify(valueCache))                    
             contatdor++
         }
@@ -62,6 +61,14 @@ class RedisCache {
         }
         
         return 
+    }
+
+    async getByKey (key) {
+
+        if(!key) 
+            return undefined
+        
+        return this.client.getAsync(key)
     }
 
 }

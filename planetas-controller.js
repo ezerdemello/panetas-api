@@ -4,6 +4,8 @@ const NotFoundError = require('./utils/not-found-error')
 const PlanetaRepository = require('./planetas-repository')
 const planetaRepository = new PlanetaRepository()
 
+const redisCache = require('./utils/redis-cache')
+
 // const PlanetaExternalService = require('./services/planetas-external-service')
 // const planetaExternalService = new PlanetaExternalService()
 // let planets = [] 
@@ -56,9 +58,25 @@ module.exports = () => {
         }    
     }
     
+    
     const listar = async (req, res, next) => {
         try {
-            return res.json(await planetaRepository.get(req.query))
+            const result = []   
+            const resultFromDb = await planetaRepository.get(req.query) 
+            
+            for(var index in resultFromDb) {
+                const item = resultFromDb[index]                     
+                item.qtdAparicoesFilmes = 0                    
+                const cache = await redisCache.getByKey(item.nome)
+                if (cache) {
+                    const cacheModel = JSON.parse(cache)
+                    item.qtdAparicoesFilmes = cacheModel.qtdFilmes
+                }
+                result.push(item)
+            }
+
+            return res.json(result)
+
         } catch (error) {
             next(error)
         }
@@ -100,3 +118,4 @@ module.exports = () => {
         obterPorId
     }
 }
+

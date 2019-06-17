@@ -5,15 +5,13 @@ class MongoDatabase {
 
     constructor() {
       
-      this._connect().then(data => {
-        
-        console.log("@@Conexao com mongodb OK!");                
-
-      }).catch(error => {
-
-        console.log('@@@@Conexao com mongodb: ', error)
-
-      })
+      this._connect()
+      
+      // .then(data => {
+      //   console.log("@@Conexao com mongodb OK!");                
+      // }).catch(error => {
+      //   console.log('@@@@Conexao com mongodb: ', error)
+      // })
 
     }
 

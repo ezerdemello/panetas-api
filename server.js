@@ -8,6 +8,7 @@ const init = async () => {
     const db = require('./utils/mongo-database')
     
     const cache = require('./utils/redis-cache')
+    
     cache.toHeatCache()
 
 
