@@ -7,55 +7,54 @@ const expressValidator = require('express-joi-validation')({ passError: true })
 const planetasController = require('./planetas-controller')()
 
 module.exports = () => {
-    return {
-      prefix: '/api/v1',
-      routes: {
-        get: [
-          {
-            path: '/planetas',
-            handlers: [
-                expressValidator.query(planetasGetQueries),
-                planetasController.listar
-            ]
-          },
-          {
-            path: '/planetas/:id',
-            handlers: [
-                expressValidator.params(planetaGetPorIdParams),
-                planetasController.obterPorId
-            ]
-          }
-        ],
-        post: [
-          {
-            path: '/planetas',
-            handlers: [
-                expressValidator.body(planetasPostPutBody),
-                planetasController.criar
-            ]
-          }
-        ],
-        put: [
-          {
-            path: '/planetas/:id',
-            handlers: [
-                expressValidator.params(planetaGetPorIdParams),
-                expressValidator.body(planetasPostPutBody),
-                planetasController.alterar
-            ]
-          }
-        ],
-        delete: [
-          {
-            path: '/planetas/:id',
-            handlers: [
-                expressValidator.params(planetaGetPorIdParams),
-                planetasController.deletar
-            ]
-          }
-        ]
-      }
+  return {
+    prefix: '/api/v1',
+    routes: {
+      get: [
+        {
+          path: '/planetas',
+          handlers: [
+            expressValidator.query(planetasGetQueries),
+            planetasController.listar
+          ]
+        },
+        {
+          path: '/planetas/:id',
+          handlers: [
+            expressValidator.params(planetaGetPorIdParams),
+            planetasController.obterPorId
+          ]
+        }
+      ],
+      post: [
+        {
+          path: '/planetas',
+          handlers: [
+            expressValidator.body(planetasPostPutBody),
+            planetasController.criar
+          ]
+        }
+      ],
+      put: [
+        {
+          path: '/planetas/:id',
+          handlers: [
+            expressValidator.params(planetaGetPorIdParams),
+            expressValidator.body(planetasPostPutBody),
+            planetasController.alterar
+          ]
+        }
+      ],
+      delete: [
+        {
+          path: '/planetas/:id',
+          handlers: [
+            expressValidator.params(planetaGetPorIdParams),
+            planetasController.deletar
+          ]
+        }
+      ]
     }
+  }
 }
 
-  

@@ -93,23 +93,6 @@ module.exports = () => {
         }
     }
 
-    // const addQtdAparicoeFilmes = (model) => {
-
-    //     console.log('addQtdAparicoeFilmes-model: ', model)
-
-    //     model.qtdAparicoesFilmes = 0
-    //     const externalPlanet = _.find(planets, { name: model.nome })  
-
-    //     console.log('externalPlanet: ', externalPlanet)
-
-    //     if (externalPlanet) {
-    //         const result = _.get(externalPlanet, 'films') 
-    //         model.qtdAparicoesFilmes = result ? result.length : 0
-    //     }
-
-    //     console.log('addQtdAparicoeFilmes-model-end: ', model)
-    // }
-
     return {
         alterar,
         criar,
